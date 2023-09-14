@@ -47,6 +47,7 @@ namespace SMTP_1
                 {
                     smtpClient.Credentials = new NetworkCredential(smtpUsername, smtpPassword);
                     smtpClient.EnableSsl = true;
+                    string[] fileEntries = Directory.GetFiles(folderPath);
 
                     using (MailMessage message = new MailMessage(fromEmail, recipient))
                     {
@@ -54,26 +55,15 @@ namespace SMTP_1
                         message.Body = "Email Body";
 
                         // Attach files
-                        string[] fileEntries = Directory.GetFiles(folderPath);
                         foreach (string filePath in fileEntries)
-                        {
-
-
                             message.Attachments.Add(new Attachment(filePath));
-                            //File.Delete(filePath);
-
-                            File.Delete(filePath);
-
-
-                            // File.Open(filePath, FileMode.Open);
-
-                        }
 
                         // Send email
                         smtpClient.Send(message);
-
-
                     }
+
+                    foreach (string filePath in fileEntries)
+                        File.Delete(filePath);
                 }
             }
         }
